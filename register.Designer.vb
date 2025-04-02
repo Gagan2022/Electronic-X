@@ -22,8 +22,7 @@ Partial Class register
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        pnlHeader = New Panel()
-        lblTitle = New Label()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(register))
         lblName = New Label()
         lblEmail = New Label()
         lblPassword = New Label()
@@ -33,70 +32,62 @@ Partial Class register
         txtPassword = New TextBox()
         btnClose = New Button()
         lblRegister = New Label()
-        pnlHeader.SuspendLayout()
+        Label1 = New Label()
         SuspendLayout()
-        ' 
-        ' pnlHeader
-        ' 
-        pnlHeader.Controls.Add(lblTitle)
-        pnlHeader.Location = New Point(0, 0)
-        pnlHeader.Name = "pnlHeader"
-        pnlHeader.Size = New Size(800, 96)
-        pnlHeader.TabIndex = 0
-        ' 
-        ' lblTitle
-        ' 
-        lblTitle.AutoSize = True
-        lblTitle.Location = New Point(345, 33)
-        lblTitle.Name = "lblTitle"
-        lblTitle.Size = New Size(146, 25)
-        lblTitle.TabIndex = 3
-        lblTitle.Text = "User Registration"
         ' 
         ' lblName
         ' 
         lblName.AutoSize = True
-        lblName.Location = New Point(183, 129)
+        lblName.BackColor = Color.Transparent
+        lblName.Font = New Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblName.ForeColor = Color.White
+        lblName.Location = New Point(216, 156)
         lblName.Name = "lblName"
-        lblName.Size = New Size(59, 25)
+        lblName.Size = New Size(68, 28)
         lblName.TabIndex = 0
         lblName.Text = "Name"
         ' 
         ' lblEmail
         ' 
         lblEmail.AutoSize = True
-        lblEmail.Location = New Point(183, 174)
+        lblEmail.BackColor = Color.Transparent
+        lblEmail.Font = New Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblEmail.ForeColor = Color.White
+        lblEmail.Location = New Point(216, 215)
         lblEmail.Name = "lblEmail"
-        lblEmail.Size = New Size(124, 25)
+        lblEmail.Size = New Size(145, 28)
         lblEmail.TabIndex = 1
         lblEmail.Text = "Email Address"
         ' 
         ' lblPassword
         ' 
         lblPassword.AutoSize = True
-        lblPassword.Location = New Point(183, 230)
+        lblPassword.BackColor = Color.Transparent
+        lblPassword.Font = New Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        lblPassword.ForeColor = Color.White
+        lblPassword.Location = New Point(216, 271)
         lblPassword.Name = "lblPassword"
-        lblPassword.Size = New Size(87, 25)
+        lblPassword.Size = New Size(101, 28)
         lblPassword.TabIndex = 2
         lblPassword.Text = "Password"
         ' 
         ' txtName
         ' 
-        txtName.Location = New Point(345, 123)
+        txtName.Location = New Point(437, 156)
         txtName.Name = "txtName"
         txtName.Size = New Size(150, 31)
         txtName.TabIndex = 4
         ' 
         ' txtEmail
         ' 
-        txtEmail.Location = New Point(345, 171)
+        txtEmail.Location = New Point(437, 212)
         txtEmail.Name = "txtEmail"
         txtEmail.Size = New Size(150, 31)
         txtEmail.TabIndex = 5
         ' 
         ' btnRegister
         ' 
-        btnRegister.Location = New Point(256, 322)
+        btnRegister.Location = New Point(216, 340)
         btnRegister.Name = "btnRegister"
         btnRegister.Size = New Size(112, 43)
         btnRegister.TabIndex = 6
@@ -105,14 +96,14 @@ Partial Class register
         ' 
         ' txtPassword
         ' 
-        txtPassword.Location = New Point(345, 227)
+        txtPassword.Location = New Point(437, 268)
         txtPassword.Name = "txtPassword"
         txtPassword.Size = New Size(150, 31)
         txtPassword.TabIndex = 7
         ' 
         ' btnClose
         ' 
-        btnClose.Location = New Point(453, 322)
+        btnClose.Location = New Point(511, 340)
         btnClose.Name = "btnClose"
         btnClose.Size = New Size(112, 43)
         btnClose.TabIndex = 8
@@ -121,18 +112,35 @@ Partial Class register
         ' 
         ' lblRegister
         ' 
-        lblRegister.AutoSize = True
-        lblRegister.Location = New Point(280, 368)
+        lblRegister.BackColor = Color.Black
+        lblRegister.Font = New Font("Segoe UI", 10F, FontStyle.Italic Or FontStyle.Underline, GraphicsUnit.Point, CByte(0))
+        lblRegister.ForeColor = Color.White
+        lblRegister.Location = New Point(760, 25)
         lblRegister.Name = "lblRegister"
-        lblRegister.Size = New Size(56, 25)
+        lblRegister.Size = New Size(67, 36)
         lblRegister.TabIndex = 9
         lblRegister.Text = "Login"
+        ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.BackColor = Color.Transparent
+        Label1.Font = New Font("Algerian", 22F, FontStyle.Bold, GraphicsUnit.Point, CByte(0))
+        Label1.ForeColor = Color.White
+        Label1.Location = New Point(199, 66)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(455, 49)
+        Label1.TabIndex = 10
+        Label1.Text = "User Registration"
         ' 
         ' register
         ' 
         AutoScaleDimensions = New SizeF(10F, 25F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(800, 450)
+        BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), Image)
+        BackgroundImageLayout = ImageLayout.Stretch
+        ClientSize = New Size(831, 446)
+        Controls.Add(Label1)
         Controls.Add(lblRegister)
         Controls.Add(btnClose)
         Controls.Add(txtPassword)
@@ -142,18 +150,14 @@ Partial Class register
         Controls.Add(txtName)
         Controls.Add(txtEmail)
         Controls.Add(btnRegister)
-        Controls.Add(pnlHeader)
+        DoubleBuffered = True
         Name = "register"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "Form1"
-        pnlHeader.ResumeLayout(False)
-        pnlHeader.PerformLayout()
         ResumeLayout(False)
         PerformLayout()
     End Sub
-
-    Friend WithEvents pnlHeader As Panel
     Friend WithEvents lblName As Label
-    Friend WithEvents lblTitle As Label
     Friend WithEvents lblPassword As Label
     Friend WithEvents lblEmail As Label
     Friend WithEvents txtName As TextBox
@@ -162,5 +166,6 @@ Partial Class register
     Friend WithEvents txtPassword As TextBox
     Friend WithEvents btnClose As Button
     Friend WithEvents lblRegister As Label
+    Friend WithEvents Label1 As Label
 
 End Class

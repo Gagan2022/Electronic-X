@@ -20,7 +20,7 @@ Public Class MainForm
     End Sub
     Protected Friend Sub LoadProducts()
         flpProducts.Controls.Clear()
-        Dim query As String = "SELECT ProductID, ProductName, Price, Stock, ImageData FROM Products"
+        Dim query As String = "SELECT ProductID, ProductName, Price, Stock, ImageData, Description FROM Products"
 
         Try
             Using conn As New SqlConnection(connectionString)
@@ -32,9 +32,10 @@ Public Class MainForm
                             Dim productName As String = reader("ProductName").ToString()
                             Dim price As Decimal = Convert.ToDecimal(reader("Price"))
                             Dim stock As Integer = Convert.ToInt32(reader("Stock"))
+                            Dim description As String = reader("Description").ToString()
                             Dim imageBytes() As Byte = If(reader("ImageData") IsNot DBNull.Value, CType(reader("ImageData"), Byte()), Nothing)
 
-                            ' Create PictureBox for the product image
+                            ' Create PictureBox for product image
                             Dim pic As New PictureBox()
                             pic.SizeMode = PictureBoxSizeMode.StretchImage
                             pic.Size = New Size(140, 100)
@@ -92,8 +93,22 @@ Public Class MainForm
                             AddHandler btnAddToCart.Click, Sub(sender, e)
                                                                Dim selectedQuantity As Integer = CInt(numQuantity.Value)
                                                                AddToCart(productID, productName, price, selectedQuantity, stock)
-                                                               UpdateCartQuantity(productID, selectedQuantity) ' ✅ Pass the selected quantity
+                                                               UpdateCartQuantity(productID, selectedQuantity)
                                                            End Sub
+
+                            ' Open Product Details Form when clicking image or name
+                            ' Open Product Details Form when clicking image or name
+                            AddHandler pic.Click, Sub(sender, e)
+                                                      Dim detailsForm As New ProductDetailsForm()
+                                                      detailsForm.SetProductDetails(productID, productName, price, stock, description, imageBytes)
+                                                      detailsForm.ShowDialog()
+                                                  End Sub
+
+                            AddHandler lblName.Click, Sub(sender, e)
+                                                          Dim detailsForm As New ProductDetailsForm()
+                                                          detailsForm.SetProductDetails(productID, productName, price, stock, description, imageBytes)
+                                                          detailsForm.ShowDialog()
+                                                      End Sub
 
 
                             ' Create Product Panel
@@ -117,6 +132,19 @@ Public Class MainForm
             MessageBox.Show("Error loading products: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Sub OpenProductDetails(productID As Integer, productName As String, price As Decimal, stock As Integer, description As String, imageBytes() As Byte)
+        ' Create an instance of ProductDetailsForm
+        Dim detailsForm As New ProductDetailsForm()
+
+        ' Pass data to ProductDetailsForm (Ensure ProductDetailsForm has these properties/methods)
+        detailsForm.SetProductDetails(productID, productName, price, stock, description, imageBytes)
+
+        ' Show the form as a dialog
+        detailsForm.ShowDialog()
+    End Sub
+
+
     Public Sub AddToCart(productID As Integer, productName As String, price As Decimal, quantity As Integer, stock As Integer)
         Using conn As New SqlConnection(connectionString)
             conn.Open()
@@ -163,7 +191,7 @@ Public Class MainForm
         UpdateCartQuantity(productID, quantity) ' ✅ Fixed: Pass productID and quantity
     End Sub
 
-    Private Sub UpdateCartQuantity(productID As Integer, newQuantity As Integer)
+    Protected Friend Sub UpdateCartQuantity(productID As Integer, newQuantity As Integer)
         Using conn As New SqlConnection(connectionString)
             conn.Open()
             Dim query As String = "UPDATE Cart SET Quantity = @Quantity WHERE UserID = @UserID AND ProductID = @ProductID"

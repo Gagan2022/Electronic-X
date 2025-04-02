@@ -26,24 +26,29 @@ Partial Class AdminForm
         lblUpdDelete = New Label()
         pnlctrl = New Panel()
         lblHome = New Label()
+        Label1 = New Label()
         pnlctrl.SuspendLayout()
         SuspendLayout()
         ' 
         ' lblAdd
         ' 
         lblAdd.AutoSize = True
-        lblAdd.Location = New Point(360, 105)
+        lblAdd.BorderStyle = BorderStyle.Fixed3D
+        lblAdd.Font = New Font("Microsoft Sans Serif", 10F, FontStyle.Italic)
+        lblAdd.Location = New Point(472, 142)
         lblAdd.Name = "lblAdd"
-        lblAdd.Size = New Size(121, 25)
+        lblAdd.Size = New Size(132, 27)
         lblAdd.TabIndex = 0
         lblAdd.Text = "Add Products"
         ' 
         ' lblUpdDelete
         ' 
         lblUpdDelete.AutoSize = True
-        lblUpdDelete.Location = New Point(360, 177)
+        lblUpdDelete.BorderStyle = BorderStyle.Fixed3D
+        lblUpdDelete.Font = New Font("Microsoft Sans Serif", 10F, FontStyle.Italic)
+        lblUpdDelete.Location = New Point(472, 255)
         lblUpdDelete.Name = "lblUpdDelete"
-        lblUpdDelete.Size = New Size(202, 25)
+        lblUpdDelete.Size = New Size(221, 27)
         lblUpdDelete.TabIndex = 1
         lblUpdDelete.Text = "Update/Delete Products"
         ' 
@@ -64,15 +69,27 @@ Partial Class AdminForm
         lblHome.TabIndex = 0
         lblHome.Text = "Home"
         ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Font = New Font("Algerian", 16F, FontStyle.Bold Or FontStyle.Underline, GraphicsUnit.Point, CByte(0))
+        Label1.Location = New Point(54, 188)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(285, 35)
+        Label1.TabIndex = 3
+        Label1.Text = "Admin Controls"
+        ' 
         ' AdminForm
         ' 
         AutoScaleDimensions = New SizeF(10F, 25F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(800, 450)
+        Controls.Add(Label1)
         Controls.Add(pnlctrl)
         Controls.Add(lblUpdDelete)
         Controls.Add(lblAdd)
         Name = "AdminForm"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "AdminForm"
         pnlctrl.ResumeLayout(False)
         pnlctrl.PerformLayout()
@@ -84,4 +101,5 @@ Partial Class AdminForm
     Friend WithEvents lblUpdDelete As Label
     Friend WithEvents pnlctrl As Panel
     Friend WithEvents lblHome As Label
+    Friend WithEvents Label1 As Label
 End Class

@@ -25,7 +25,6 @@ Partial Class AddProduct
         PictureBox1 = New PictureBox()
         txtProductName = New TextBox()
         txtPrice = New TextBox()
-        txtDescription = New TextBox()
         txtStock = New TextBox()
         txtCategory = New TextBox()
         Label1 = New Label()
@@ -37,13 +36,14 @@ Partial Class AddProduct
         btnSave = New Button()
         lblBack = New Label()
         btnBrowse = New Button()
+        txtDescription = New RichTextBox()
         CType(PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
         SuspendLayout()
         ' 
         ' PictureBox1
         ' 
         PictureBox1.BorderStyle = BorderStyle.FixedSingle
-        PictureBox1.Location = New Point(374, 334)
+        PictureBox1.Location = New Point(374, 457)
         PictureBox1.Name = "PictureBox1"
         PictureBox1.Size = New Size(150, 75)
         PictureBox1.TabIndex = 0
@@ -63,23 +63,16 @@ Partial Class AddProduct
         txtPrice.Size = New Size(150, 31)
         txtPrice.TabIndex = 2
         ' 
-        ' txtDescription
-        ' 
-        txtDescription.Location = New Point(374, 154)
-        txtDescription.Name = "txtDescription"
-        txtDescription.Size = New Size(150, 31)
-        txtDescription.TabIndex = 3
-        ' 
         ' txtStock
         ' 
-        txtStock.Location = New Point(374, 220)
+        txtStock.Location = New Point(374, 328)
         txtStock.Name = "txtStock"
         txtStock.Size = New Size(150, 31)
         txtStock.TabIndex = 4
         ' 
         ' txtCategory
         ' 
-        txtCategory.Location = New Point(374, 269)
+        txtCategory.Location = New Point(374, 391)
         txtCategory.Name = "txtCategory"
         txtCategory.Size = New Size(150, 31)
         txtCategory.TabIndex = 5
@@ -114,7 +107,7 @@ Partial Class AddProduct
         ' Label4
         ' 
         Label4.AutoSize = True
-        Label4.Location = New Point(215, 220)
+        Label4.Location = New Point(215, 334)
         Label4.Name = "Label4"
         Label4.Size = New Size(55, 25)
         Label4.TabIndex = 9
@@ -123,7 +116,7 @@ Partial Class AddProduct
         ' Label5
         ' 
         Label5.AutoSize = True
-        Label5.Location = New Point(215, 269)
+        Label5.Location = New Point(215, 397)
         Label5.Name = "Label5"
         Label5.Size = New Size(84, 25)
         Label5.TabIndex = 10
@@ -132,7 +125,7 @@ Partial Class AddProduct
         ' Label6
         ' 
         Label6.AutoSize = True
-        Label6.Location = New Point(215, 320)
+        Label6.Location = New Point(215, 457)
         Label6.Name = "Label6"
         Label6.Size = New Size(62, 25)
         Label6.TabIndex = 11
@@ -140,7 +133,7 @@ Partial Class AddProduct
         ' 
         ' btnSave
         ' 
-        btnSave.Location = New Point(374, 443)
+        btnSave.Location = New Point(374, 553)
         btnSave.Name = "btnSave"
         btnSave.Size = New Size(112, 34)
         btnSave.TabIndex = 12
@@ -158,18 +151,27 @@ Partial Class AddProduct
         ' 
         ' btnBrowse
         ' 
-        btnBrowse.Location = New Point(554, 351)
+        btnBrowse.Location = New Point(553, 475)
         btnBrowse.Name = "btnBrowse"
         btnBrowse.Size = New Size(112, 34)
         btnBrowse.TabIndex = 14
         btnBrowse.Text = "Browse"
         btnBrowse.UseVisualStyleBackColor = True
         ' 
+        ' txtDescription
+        ' 
+        txtDescription.Location = New Point(374, 160)
+        txtDescription.Name = "txtDescription"
+        txtDescription.Size = New Size(316, 144)
+        txtDescription.TabIndex = 15
+        txtDescription.Text = ""
+        ' 
         ' AddProduct
         ' 
         AutoScaleDimensions = New SizeF(10F, 25F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(872, 503)
+        ClientSize = New Size(872, 628)
+        Controls.Add(txtDescription)
         Controls.Add(btnBrowse)
         Controls.Add(lblBack)
         Controls.Add(btnSave)
@@ -181,11 +183,11 @@ Partial Class AddProduct
         Controls.Add(Label1)
         Controls.Add(txtCategory)
         Controls.Add(txtStock)
-        Controls.Add(txtDescription)
         Controls.Add(txtPrice)
         Controls.Add(txtProductName)
         Controls.Add(PictureBox1)
         Name = "AddProduct"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "AddProduct"
         CType(PictureBox1, ComponentModel.ISupportInitialize).EndInit()
         ResumeLayout(False)
@@ -195,7 +197,6 @@ Partial Class AddProduct
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents txtProductName As TextBox
     Friend WithEvents txtPrice As TextBox
-    Friend WithEvents txtDescription As TextBox
     Friend WithEvents txtStock As TextBox
     Friend WithEvents txtCategory As TextBox
     Friend WithEvents Label1 As Label
@@ -207,4 +208,5 @@ Partial Class AddProduct
     Friend WithEvents btnSave As Button
     Friend WithEvents lblBack As Label
     Friend WithEvents btnBrowse As Button
+    Friend WithEvents txtDescription As RichTextBox
 End Class

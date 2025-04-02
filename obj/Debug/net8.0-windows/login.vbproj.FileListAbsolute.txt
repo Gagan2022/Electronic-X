@@ -76,3 +76,6 @@ C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.OrderForm
 C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.AddProduct.resources
 C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.UpdDeleteForm.resources
 C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.PaymentForm.resources
+C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.sourcelink.json
+C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.ProductDetailsForm.resources
+C:\Users\gagan\source\repos\login\login\obj\Debug\net8.0-windows\login.Resources.resources

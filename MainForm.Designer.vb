@@ -44,13 +44,13 @@ Partial Class MainForm
         pnlMenu.Controls.Add(lbluser)
         pnlMenu.Location = New Point(0, 0)
         pnlMenu.Name = "pnlMenu"
-        pnlMenu.Size = New Size(925, 60)
+        pnlMenu.Size = New Size(1012, 60)
         pnlMenu.TabIndex = 0
         ' 
         ' lblAdminForm
         ' 
         lblAdminForm.AutoSize = True
-        lblAdminForm.Location = New Point(614, 18)
+        lblAdminForm.Location = New Point(652, 18)
         lblAdminForm.Name = "lblAdminForm"
         lblAdminForm.Size = New Size(65, 25)
         lblAdminForm.TabIndex = 8
@@ -59,7 +59,7 @@ Partial Class MainForm
         ' lblLogOut
         ' 
         lblLogOut.AutoSize = True
-        lblLogOut.Location = New Point(850, 18)
+        lblLogOut.Location = New Point(920, 18)
         lblLogOut.Name = "lblLogOut"
         lblLogOut.Size = New Size(72, 25)
         lblLogOut.TabIndex = 4
@@ -68,7 +68,7 @@ Partial Class MainForm
         ' lblMyOrders
         ' 
         lblMyOrders.AutoSize = True
-        lblMyOrders.Location = New Point(753, 18)
+        lblMyOrders.Location = New Point(813, 18)
         lblMyOrders.Name = "lblMyOrders"
         lblMyOrders.Size = New Size(91, 25)
         lblMyOrders.TabIndex = 6
@@ -77,7 +77,7 @@ Partial Class MainForm
         ' lblProfile
         ' 
         lblProfile.AutoSize = True
-        lblProfile.Location = New Point(685, 18)
+        lblProfile.Location = New Point(735, 18)
         lblProfile.Name = "lblProfile"
         lblProfile.Size = New Size(62, 25)
         lblProfile.TabIndex = 7
@@ -109,14 +109,15 @@ Partial Class MainForm
         flpProducts.AutoScroll = True
         flpProducts.Location = New Point(12, 80)
         flpProducts.Name = "flpProducts"
-        flpProducts.Size = New Size(913, 374)
+        flpProducts.Size = New Size(1000, 374)
         flpProducts.TabIndex = 2
         ' 
         ' MainForm
         ' 
         AutoScaleDimensions = New SizeF(10F, 25F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(937, 491)
+        BackColor = Color.White
+        ClientSize = New Size(1024, 491)
         Controls.Add(flpProducts)
         Controls.Add(lblTime)
         Controls.Add(pnlMenu)

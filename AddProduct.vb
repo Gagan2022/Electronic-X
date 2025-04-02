@@ -98,4 +98,8 @@ Public Class AddProduct
         Me.Close()
         AdminForm.Show()
     End Sub
+
+    Private Sub txtDescription_TextChanged(sender As Object, e As EventArgs)
+
+    End Sub
 End Class

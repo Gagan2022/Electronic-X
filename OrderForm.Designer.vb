@@ -159,6 +159,7 @@ Partial Class OrderForm
         Controls.Add(Panel2)
         Controls.Add(Panel1)
         Name = "OrderForm"
+        StartPosition = FormStartPosition.CenterScreen
         Text = "OrderForm"
         Panel1.ResumeLayout(False)
         Panel1.PerformLayout()

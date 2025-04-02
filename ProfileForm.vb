@@ -11,7 +11,7 @@ Public Class ProfileForm
         Try
             Using conn As New SqlConnection(connectionString)
                 conn.Open()
-                Dim query As String = "SELECT FirstName, LastName, Address, Gender FROM UserProfiles WHERE ID = @ID"
+                Dim query As String = "SELECT FirstName, LastName, Address, Gender, phone_no FROM UserProfiles WHERE ID = @ID"
                 Using cmd As New SqlCommand(query, conn)
                     cmd.Parameters.AddWithValue("@ID", login.CurrentUserID)
                     Using reader As SqlDataReader = cmd.ExecuteReader()
@@ -19,6 +19,7 @@ Public Class ProfileForm
                             txtFirstName.Text = reader("FirstName").ToString()
                             txtLastName.Text = reader("LastName").ToString()
                             txtAddress.Text = reader("Address").ToString()
+                            txtPhone_No.Text = reader("Phone_no").ToString()
                             cmbGender.SelectedItem = reader("Gender").ToString()
 
                             ' Disable fields if user details are already entered
@@ -27,6 +28,7 @@ Public Class ProfileForm
                                 txtLastName.Enabled = False
                                 txtAddress.Enabled = False
                                 cmbGender.Enabled = False
+                                txtPhone_No.Enabled = False
                                 btnSave.Enabled = False
                             End If
                         End If
@@ -57,12 +59,13 @@ Public Class ProfileForm
 
                     If count = 0 Then
                         ' Insert new profile
-                        Dim insertQuery As String = "INSERT INTO UserProfiles (ID, FirstName, LastName, Address, Gender) VALUES (@ID, @FirstName, @LastName, @Address, @Gender)"
+                        Dim insertQuery As String = "INSERT INTO UserProfiles (ID, FirstName, LastName, Address,Phone_No , Gender) VALUES (@ID, @FirstName, @LastName, @Address, @Phone_No, @Gender)"
                         Using insertCmd As New SqlCommand(insertQuery, conn)
                             insertCmd.Parameters.AddWithValue("@ID", login.CurrentUserID)
                             insertCmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text)
                             insertCmd.Parameters.AddWithValue("@LastName", txtLastName.Text)
                             insertCmd.Parameters.AddWithValue("@Address", txtAddress.Text)
+                            insertCmd.Parameters.AddWithValue("@Phone_No", txtPhone_No.Text)
                             insertCmd.Parameters.AddWithValue("@Gender", cmbGender.SelectedItem.ToString())
                             insertCmd.ExecuteNonQuery()
                         End Using
@@ -73,6 +76,7 @@ Public Class ProfileForm
                             updateCmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text)
                             updateCmd.Parameters.AddWithValue("@LastName", txtLastName.Text)
                             updateCmd.Parameters.AddWithValue("@Address", txtAddress.Text)
+                            updateCmd.Parameters.AddWithValue("@Phone_No", txtPhone_No.Text)
                             updateCmd.Parameters.AddWithValue("@Gender", cmbGender.SelectedItem.ToString())
                             updateCmd.Parameters.AddWithValue("@ID", login.CurrentUserID)
                             updateCmd.ExecuteNonQuery()
@@ -101,4 +105,5 @@ Public Class ProfileForm
         Me.Close()
         MainForm.Show()
     End Sub
+
 End Class

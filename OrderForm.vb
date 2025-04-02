@@ -175,8 +175,9 @@ Public Class OrderForm
 
     ' 🛒 Place Order Button (Moves Cart Items to Order Table)
     Private Sub btnPlaceOrder_Click(sender As Object, e As EventArgs) Handles btnPlaceOrder.Click
-        Me.Hide()
-        PaymentForm.Show()
+        'Me.Hide()
+        'PaymentForm.Show()
+        MessageBox.Show("Order SuccessFully Placed")
     End Sub
     Private Function GetCurrentQuantity(productID As Integer) As Integer
         Using conn As New SqlConnection(connectionString)

@@ -6,27 +6,6 @@ Imports System.Drawing.Text  ' Required for SQL Server connection
 Public Class register
     ' Define the connection
     Dim connString As New String("Server=GAGAN\SQLEXPRESS;Database=seproject;Integrated Security=True;TrustServerCertificate=True;")
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' Apply UI Enhancements
-        Me.Text = "User Registration"
-        Me.BackColor = Color.White
-        Me.FormBorderStyle = FormBorderStyle.FixedSingle
-        Me.MaximizeBox = False
-
-        ' Panel Design
-        pnlHeader.BackColor = Color.FromArgb(41, 128, 185) ' Blue color
-        pnlHeader.Dock = DockStyle.Top
-        pnlHeader.Height = 50
-
-        ' Title Label
-        lblTitle.Text = "User Registration"
-        lblTitle.ForeColor = Color.White
-        lblTitle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
-        lblTitle.TextAlign = ContentAlignment.MiddleCenter
-        lblTitle.Dock = DockStyle.Fill
-    End Sub
-
     Private Function HashPassword(password As String) As String
         Dim salt As Byte() = New Byte(15) {}
         RandomNumberGenerator.Fill(salt)
@@ -72,6 +51,10 @@ Public Class register
         ' Hide the LoginForm and show the RegistrationForm
         Me.Hide()
         login.Show()
+    End Sub
+
+    Private Sub register_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
     End Sub
 End Class
 
