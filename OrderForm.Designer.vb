@@ -35,7 +35,6 @@ Partial Class OrderForm
         lblTotalPrice = New Label()
         flpCart = New FlowLayoutPanel()
         pnlOrderHistory = New Panel()
-        lblNoOrders = New Label()
         flpOrderHistory = New FlowLayoutPanel()
         Panel1.SuspendLayout()
         Panel2.SuspendLayout()
@@ -124,22 +123,12 @@ Partial Class OrderForm
         ' 
         ' pnlOrderHistory
         ' 
-        pnlOrderHistory.Controls.Add(lblNoOrders)
         pnlOrderHistory.Controls.Add(flpOrderHistory)
         pnlOrderHistory.Location = New Point(10, 60)
         pnlOrderHistory.Name = "pnlOrderHistory"
         pnlOrderHistory.Size = New Size(450, 400)
         pnlOrderHistory.TabIndex = 2
         pnlOrderHistory.Visible = False
-        ' 
-        ' lblNoOrders
-        ' 
-        lblNoOrders.AutoSize = True
-        lblNoOrders.Location = New Point(100, 160)
-        lblNoOrders.Name = "lblNoOrders"
-        lblNoOrders.Size = New Size(190, 25)
-        lblNoOrders.TabIndex = 0
-        lblNoOrders.Text = """Place your first order"""
         ' 
         ' flpOrderHistory
         ' 
@@ -166,7 +155,6 @@ Partial Class OrderForm
         Panel2.ResumeLayout(False)
         pnlCart.ResumeLayout(False)
         pnlOrderHistory.ResumeLayout(False)
-        pnlOrderHistory.PerformLayout()
         ResumeLayout(False)
     End Sub
 

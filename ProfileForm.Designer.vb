@@ -64,7 +64,7 @@ Partial Class ProfileForm
         ' cmbGender
         ' 
         cmbGender.FormattingEnabled = True
-        cmbGender.Items.AddRange(New Object() {"Male", "Female", "Mentally ill"})
+        cmbGender.Items.AddRange(New Object() {"Male", "Female"})
         cmbGender.Location = New Point(549, 325)
         cmbGender.Name = "cmbGender"
         cmbGender.Size = New Size(182, 33)

@@ -19,13 +19,14 @@ Public Class register
     Private Sub btnRegister_Click(sender As Object, e As EventArgs) Handles btnRegister.Click
         ' Insert User Data into SQL Server
         Dim conn As New SqlConnection(connString)
-        Dim query As String = "INSERT INTO Users (FullName, Email, Password) VALUES (@name, @email, @password)"
+        Dim query As String = "INSERT INTO Users (FullName, Email, Password, Role) VALUES (@name, @email, @password, @role)"
 
         Try
             conn.Open()
             Dim cmd As New SqlCommand(query, conn)
             cmd.Parameters.AddWithValue("@name", txtName.Text)
             cmd.Parameters.AddWithValue("@email", txtEmail.Text)
+            cmd.Parameters.AddWithValue("@role", "user")
             cmd.Parameters.AddWithValue("@password", HashPassword(txtPassword.Text)) ' Store hashed password
 
             cmd.ExecuteNonQuery()

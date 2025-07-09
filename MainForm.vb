@@ -20,28 +20,58 @@ Public Class MainForm
     End Sub
     Protected Friend Sub LoadProducts()
         flpProducts.Controls.Clear()
-        Dim query As String = "SELECT ProductID, ProductName, Price, Stock, ImageData, Description FROM Products"
+        flpProducts.Dock = DockStyle.Fill
+        flpProducts.AutoScroll = True
+        flpProducts.WrapContents = False
+        flpProducts.FlowDirection = FlowDirection.TopDown
+
+        Dim query As String = "SELECT ProductID, ProductName, Price, Stock, ImageData, Description, Category FROM Products"
 
         Try
             Using conn As New SqlConnection(connectionString)
                 conn.Open()
                 Using cmd As New SqlCommand(query, conn)
                     Using reader As SqlDataReader = cmd.ExecuteReader()
+                        Dim categoryPanels As New Dictionary(Of String, FlowLayoutPanel)()
+
                         While reader.Read()
                             Dim productID As Integer = Convert.ToInt32(reader("ProductID"))
                             Dim productName As String = reader("ProductName").ToString()
                             Dim price As Decimal = Convert.ToDecimal(reader("Price"))
                             Dim stock As Integer = Convert.ToInt32(reader("Stock"))
                             Dim description As String = reader("Description").ToString()
+                            Dim category As String = reader("Category").ToString()
                             Dim imageBytes() As Byte = If(reader("ImageData") IsNot DBNull.Value, CType(reader("ImageData"), Byte()), Nothing)
 
-                            ' Create PictureBox for product image
+                            If Not categoryPanels.ContainsKey(category) Then
+                                ' Category Label
+                                Dim lblCategory As New Label()
+                                lblCategory.Text = category
+                                lblCategory.Font = New Font("Arial", 12, FontStyle.Bold)
+                                lblCategory.AutoSize = True
+                                lblCategory.Margin = New Padding(10, 20, 0, 5)
+                                flpProducts.Controls.Add(lblCategory)
+
+                                ' Category FlowLayoutPanel
+                                Dim catPanel As New FlowLayoutPanel()
+                                catPanel.FlowDirection = FlowDirection.LeftToRight
+                                catPanel.WrapContents = True
+                                catPanel.AutoSize = True
+                                catPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                                catPanel.Dock = DockStyle.Top
+                                catPanel.Anchor = AnchorStyles.Left Or AnchorStyles.Right Or AnchorStyles.Top
+                                catPanel.Margin = New Padding(10, 0, 10, 10)
+
+                                flpProducts.Controls.Add(catPanel)
+                                categoryPanels(category) = catPanel
+                            End If
+
+                            ' Product Image
                             Dim pic As New PictureBox()
                             pic.SizeMode = PictureBoxSizeMode.StretchImage
                             pic.Size = New Size(140, 100)
                             pic.Location = New Point(10, 10)
 
-                            ' Convert binary data to an image
                             If imageBytes IsNot Nothing Then
                                 Using ms As New MemoryStream(imageBytes)
                                     pic.Image = Image.FromStream(ms)
@@ -54,13 +84,14 @@ Public Class MainForm
                                 pic.Image = defaultImage
                             End If
 
-                            ' Create Labels for product details
+                            ' Product Name
                             Dim lblName As New Label()
                             lblName.Text = productName
                             lblName.AutoSize = True
                             lblName.Font = New Font("Arial", 10, FontStyle.Bold)
                             lblName.Location = New Point(10, 120)
 
+                            ' Price
                             Dim lblPrice As New Label()
                             lblPrice.Text = "₹" & price.ToString("N2")
                             lblPrice.AutoSize = True
@@ -68,36 +99,60 @@ Public Class MainForm
                             lblPrice.ForeColor = Color.Green
                             lblPrice.Location = New Point(10, 150)
 
+                            ' Stock Label
                             Dim lblStock As New Label()
-                            lblStock.Text = "Stock: " & stock.ToString()
                             lblStock.AutoSize = True
                             lblStock.Font = New Font("Arial", 9, FontStyle.Bold)
-                            lblStock.ForeColor = If(stock > 0, Color.Blue, Color.Red)
                             lblStock.Location = New Point(10, 180)
 
-                            ' NumericUpDown for quantity selection
+                            If stock > 0 Then
+                                lblStock.Text = "Stock: " & stock.ToString()
+                                lblStock.ForeColor = Color.Blue
+                            Else
+                                lblStock.Text = "Out of Stock"
+                                lblStock.ForeColor = Color.Red
+                            End If
+
+                            ' ✅ Check if product is already in the cart
+                            Dim existingCartQty As Integer = 0
+                            If stock > 0 Then
+                                Using connQty As New SqlConnection(connectionString)
+                                    connQty.Open()
+                                    Dim qtyQuery As String = "SELECT Quantity FROM Cart WHERE UserID = @UserID AND ProductID = @ProductID"
+                                    Using cmdQty As New SqlCommand(qtyQuery, connQty)
+                                        cmdQty.Parameters.AddWithValue("@UserID", login.CurrentUserID)
+                                        cmdQty.Parameters.AddWithValue("@ProductID", productID)
+                                        Dim result As Object = cmdQty.ExecuteScalar()
+                                        If result IsNot Nothing Then
+                                            existingCartQty = CInt(result)
+                                        End If
+                                    End Using
+                                End Using
+                            End If
+
+                            ' Quantity Selector
                             Dim numQuantity As New NumericUpDown()
                             numQuantity.Minimum = 1
-                            numQuantity.Maximum = stock
-                            numQuantity.Value = 1
+                            numQuantity.Maximum = If(stock > 0, stock, 1)
+                            numQuantity.Value = If(existingCartQty > 0, existingCartQty, 1)
                             numQuantity.Location = New Point(10, 200)
                             numQuantity.Width = 50
+                            numQuantity.Enabled = stock > 0
 
-                            ' Create "Add to Cart" Button
+                            ' Add to Cart / Update Button
                             Dim btnAddToCart As New Button()
-                            btnAddToCart.Text = "Add to Cart"
+                            btnAddToCart.Text = If(existingCartQty > 0, "Update Cart", "Add to Cart")
                             btnAddToCart.Size = New Size(100, 30)
                             btnAddToCart.Location = New Point(70, 200)
+                            btnAddToCart.Enabled = stock > 0
 
-                            ' Add Click Event for "Add to Cart"
                             AddHandler btnAddToCart.Click, Sub(sender, e)
                                                                Dim selectedQuantity As Integer = CInt(numQuantity.Value)
                                                                AddToCart(productID, productName, price, selectedQuantity, stock)
-                                                               UpdateCartQuantity(productID, selectedQuantity)
+                                                               btnAddToCart.Text = "Update Cart"
                                                            End Sub
 
-                            ' Open Product Details Form when clicking image or name
-                            ' Open Product Details Form when clicking image or name
+                            ' Open product details on image or name click
                             AddHandler pic.Click, Sub(sender, e)
                                                       Dim detailsForm As New ProductDetailsForm()
                                                       detailsForm.SetProductDetails(productID, productName, price, stock, description, imageBytes)
@@ -110,11 +165,13 @@ Public Class MainForm
                                                           detailsForm.ShowDialog()
                                                       End Sub
 
-
-                            ' Create Product Panel
+                            ' Product Panel
                             Dim productPanel As New Panel()
-                            productPanel.Size = New Size(160, 250)
+                            productPanel.Size = New Size(180, 270)
                             productPanel.BorderStyle = BorderStyle.FixedSingle
+                            productPanel.Margin = New Padding(10)
+                            productPanel.Anchor = AnchorStyles.Top Or AnchorStyles.Left
+
                             productPanel.Controls.Add(pic)
                             productPanel.Controls.Add(lblName)
                             productPanel.Controls.Add(lblPrice)
@@ -122,8 +179,9 @@ Public Class MainForm
                             productPanel.Controls.Add(numQuantity)
                             productPanel.Controls.Add(btnAddToCart)
 
-                            ' Add Panel to FlowLayoutPanel
-                            flpProducts.Controls.Add(productPanel)
+                            ' Add to category panel
+                            categoryPanels(category).Controls.Add(productPanel)
+
                         End While
                     End Using
                 End Using
@@ -132,6 +190,8 @@ Public Class MainForm
             MessageBox.Show("Error loading products: " & ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+
 
     Private Sub OpenProductDetails(productID As Integer, productName As String, price As Decimal, stock As Integer, description As String, imageBytes() As Byte)
         ' Create an instance of ProductDetailsForm
@@ -157,19 +217,17 @@ Public Class MainForm
 
                 Dim existingQuantity As Object = checkCmd.ExecuteScalar()
 
+                ' Prevent exceeding stock
+                If quantity > stock Then
+                    MessageBox.Show("Cannot add more than available stock!", "Stock Limit", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+
                 If existingQuantity IsNot Nothing Then
-                    ' Update existing cart quantity
-                    Dim newQuantity As Integer = CInt(existingQuantity) + quantity
-
-                    ' Prevent exceeding stock
-                    If newQuantity > stock Then
-                        MessageBox.Show("Cannot add more than available stock!", "Stock Limit", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        Return
-                    End If
-
+                    ' Replace quantity in the cart (not add)
                     Dim updateQuery As String = "UPDATE Cart SET Quantity = @Quantity WHERE UserID = @UserID AND ProductID = @ProductID"
                     Using updateCmd As New SqlCommand(updateQuery, conn)
-                        updateCmd.Parameters.AddWithValue("@Quantity", newQuantity)
+                        updateCmd.Parameters.AddWithValue("@Quantity", quantity)
                         updateCmd.Parameters.AddWithValue("@UserID", login.CurrentUserID)
                         updateCmd.Parameters.AddWithValue("@ProductID", productID)
                         updateCmd.ExecuteNonQuery()
@@ -188,8 +246,22 @@ Public Class MainForm
         End Using
 
         ' Update Order Form with correct parameters
-        UpdateCartQuantity(productID, quantity) ' ✅ Fixed: Pass productID and quantity
+        Dim updatedQuantityQuery As String = "SELECT Quantity FROM Cart WHERE UserID = @UserID AND ProductID = @ProductID"
+        Using conn2 As New SqlConnection(connectionString)
+            conn2.Open()
+            Using cmd2 As New SqlCommand(updatedQuantityQuery, conn2)
+                cmd2.Parameters.AddWithValue("@UserID", login.CurrentUserID)
+                cmd2.Parameters.AddWithValue("@ProductID", productID)
+
+                Dim finalQty As Object = cmd2.ExecuteScalar()
+                If finalQty IsNot Nothing Then
+                    UpdateCartQuantity(productID, CInt(finalQty))
+                End If
+            End Using
+        End Using
     End Sub
+
+
 
     Protected Friend Sub UpdateCartQuantity(productID As Integer, newQuantity As Integer)
         Using conn As New SqlConnection(connectionString)
@@ -238,12 +310,6 @@ Public Class MainForm
     End Sub
 
 
-
-    Private Sub lblAdminForm_Click(sender As Object, e As EventArgs) Handles lblAdminForm.Click
-        Dim AdminForm As New AdminForm
-        AdminForm.Show()
-        Me.Close()
-    End Sub
 
     Private Sub lblProfile_Click(sender As Object, e As EventArgs) Handles lblProfile.Click
         Dim ProfileForm As New ProfileForm()

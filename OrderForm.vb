@@ -2,7 +2,9 @@
 Imports System.IO
 
 Public Class OrderForm
-    Private connectionString As String = "Server=GAGAN\SQLEXPRESS;Database=seproject;Integrated Security=True;TrustServerCertificate=True;"
+    Private connectionString As String = "Server=GAGAN\SQLEXPRESS;Database=seproject;Integrated Security=True;TrustServerCertificate=True;MultipleActiveResultSets=True"
+
+
 
     Private Sub OrderForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ShowCart() ' Default view is Cart
@@ -141,44 +143,90 @@ Public Class OrderForm
 
         Using conn As New SqlConnection(connectionString)
             conn.Open()
-            Dim query As String = "SELECT OrderID, OrderDate, TotalAmount, Status FROM Orders WHERE UserID = @UserID ORDER BY OrderDate DESC"
-            Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@UserID", login.CurrentUserID)
-                Using reader As SqlDataReader = cmd.ExecuteReader()
-                    If reader.HasRows Then
-                        While reader.Read()
-                            Dim orderPanel As New Panel With {.Size = New Size(400, 80), .BorderStyle = BorderStyle.FixedSingle}
-                            Dim lblOrder As New Label With {
-                                .Text = "Order #" & reader("OrderID").ToString() & " - " & reader("Status").ToString() & " - ₹" & reader("TotalAmount").ToString(),
-                                .Font = New Font("Arial", 10, FontStyle.Bold),
-                                .Location = New Point(10, 10),
-                                .AutoSize = True
-                            }
-                            orderPanel.Controls.Add(lblOrder)
+
+            Dim queryOrders As String = "SELECT OrderID, OrderDate, TotalAmount FROM Orders WHERE UserID = @UserID ORDER BY OrderDate DESC"
+            Using cmdOrders As New SqlCommand(queryOrders, conn)
+                cmdOrders.Parameters.AddWithValue("@UserID", login.CurrentUserID)
+
+                Using readerOrders As SqlDataReader = cmdOrders.ExecuteReader()
+                    If readerOrders.HasRows Then
+                        While readerOrders.Read()
+                            Dim orderId As Integer = readerOrders("OrderID")
+                            Dim orderPanel As New Panel With {.Size = New Size(400, 120), .BorderStyle = BorderStyle.FixedSingle}
+                            Dim lblOrderInfo As New Label With {
+                            .Text = $"Order #{orderId} - ₹{readerOrders("TotalAmount")} on {CDate(readerOrders("OrderDate")).ToShortDateString()}",
+                            .Font = New Font("Arial", 10, FontStyle.Bold),
+                            .Location = New Point(10, 10),
+                            .AutoSize = True
+                        }
+
+                            orderPanel.Controls.Add(lblOrderInfo)
+
+                            ' Fetch order items using a new connection
+                            Using connItems As New SqlConnection(connectionString)
+                                connItems.Open()
+
+                                Dim queryItems As String = "SELECT p.ProductName, oi.Quantity, p.Price
+                                                        FROM OrderItems oi 
+                                                        INNER JOIN Products p ON oi.ProductID = p.ProductID 
+                                                        WHERE oi.OrderID = @OrderID"
+                                Using cmdItems As New SqlCommand(queryItems, connItems)
+                                    cmdItems.Parameters.AddWithValue("@OrderID", orderId)
+
+                                    Using readerItems As SqlDataReader = cmdItems.ExecuteReader()
+                                        Dim yPos As Integer = 30
+                                        While readerItems.Read()
+                                            Dim productName As String = readerItems("ProductName").ToString()
+                                            Dim quantity As Integer = Convert.ToInt32(readerItems("Quantity"))
+                                            Dim price As Decimal = Convert.ToDecimal(readerItems("Price"))
+
+                                            Dim lblItem As New Label With {
+                                            .Text = $"• {productName} x{quantity} @ ₹{price.ToString("N2")}",
+                                            .Location = New Point(20, yPos),
+                                            .Font = New Font("Arial", 9),
+                                            .AutoSize = True
+                                        }
+                                            orderPanel.Controls.Add(lblItem)
+                                            yPos += 20
+                                        End While
+                                    End Using
+                                End Using
+                            End Using
+
                             flpOrderHistory.Controls.Add(orderPanel)
                         End While
                     Else
                         Dim lblNoOrders As New Label With {
-                            .Text = "Place your first order",
-                            .ForeColor = Color.Blue,
-                            .Font = New Font("Arial", 12, FontStyle.Bold),
-                            .Location = New Point(10, 10),
-                            .AutoSize = True
-                        }
-                        AddHandler lblNoOrders.Click, Sub() MainForm.Show()
-                        pnlOrderHistory.Controls.Add(lblNoOrders)
+                        .Text = "Place your first order",
+                        .ForeColor = Color.Blue,
+                        .Font = New Font("Arial", 12, FontStyle.Bold),
+                        .Location = New Point(10, 10),
+                        .AutoSize = True
+                    }
+                        AddHandler lblNoOrders.Click, Sub()
+                                                          MainForm.Show()
+                                                          Me.Close()
+                                                      End Sub
+                        flpOrderHistory.Controls.Add(lblNoOrders)
                     End If
                 End Using
             End Using
         End Using
     End Sub
 
+
+
     ' 🛒 Place Order Button (Moves Cart Items to Order Table)
     Private Sub btnPlaceOrder_Click(sender As Object, e As EventArgs) Handles btnPlaceOrder.Click
-        'Me.Hide()
-        'PaymentForm.Show()
-        MessageBox.Show("Order SuccessFully Placed")
+        Dim payForm As New PaymentForm()
+        payForm.ShowDialog()
+
+        ' 🔁 After order placed:
+        LoadOrderHistory()
+        ShowOrderHistory() ' Switch to the Order History tab
     End Sub
+
+
     Private Function GetCurrentQuantity(productID As Integer) As Integer
         Using conn As New SqlConnection(connectionString)
             conn.Open()

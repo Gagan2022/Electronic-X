@@ -30,7 +30,8 @@ Public Class login
         End If
 
         ' Query to find the user by email (username)
-        Dim query As String = "SELECT ID, FullName, Email, Password FROM Users WHERE Email = @username"
+        Dim query As String = "SELECT ID, FullName, Email, Password, Role FROM Users WHERE Email = @username"
+
 
         Using conn As New SqlConnection(connString)
             Try
@@ -45,30 +46,30 @@ Public Class login
 
                 If reader.HasRows Then
                     reader.Read()
-                    ' Store the logged-in UserID
                     CurrentUserID = Convert.ToInt32(reader("ID"))
 
-                    ' Split the stored password into salt and hash
                     Dim storedPassword As String = reader("Password").ToString()
                     Dim passwordParts As String() = storedPassword.Split(":"c)
 
-                    ' The salt is the first part (stored as a Base64 string), and the hash is the second part
-                    Dim storedSalt As String = passwordParts(0)  ' The salt (Base64 encoded string)
-                    Dim storedHash As String = passwordParts(1)  ' The hash (Base64 encoded string)
+                    Dim storedSalt As String = passwordParts(0)
+                    Dim storedHash As String = passwordParts(1)
 
-                    ' Now, hash the entered password using the stored salt
                     If HashPassword(password, storedSalt) = storedHash Then
-                        ' MessageBox.Show("Login Successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Dim role As String = reader("Role").ToString().ToLower()
 
-                        ' Hide the login form and show the main form
-                        Me.Hide()  ' Hide the LoginForm
-                        MainForm.Show()  ' Show the MainForm
+                        Me.Hide()
+                        If role = "admin" Then
+                            AdminForm.Show()
+                        Else
+                            MainForm.Show()
+                        End If
                     Else
                         MessageBox.Show("Invalid password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End If
                 Else
                     MessageBox.Show("User not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
+
 
             Catch ex As Exception
                 MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)

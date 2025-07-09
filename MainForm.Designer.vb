@@ -24,7 +24,6 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         components = New ComponentModel.Container()
         pnlMenu = New Panel()
-        lblAdminForm = New Label()
         lblLogOut = New Label()
         lblMyOrders = New Label()
         lblProfile = New Label()
@@ -37,24 +36,15 @@ Partial Class MainForm
         ' 
         ' pnlMenu
         ' 
-        pnlMenu.Controls.Add(lblAdminForm)
         pnlMenu.Controls.Add(lblLogOut)
         pnlMenu.Controls.Add(lblMyOrders)
         pnlMenu.Controls.Add(lblProfile)
         pnlMenu.Controls.Add(lbluser)
+        pnlMenu.Dock = DockStyle.Top
         pnlMenu.Location = New Point(0, 0)
         pnlMenu.Name = "pnlMenu"
-        pnlMenu.Size = New Size(1012, 60)
+        pnlMenu.Size = New Size(1024, 60)
         pnlMenu.TabIndex = 0
-        ' 
-        ' lblAdminForm
-        ' 
-        lblAdminForm.AutoSize = True
-        lblAdminForm.Location = New Point(652, 18)
-        lblAdminForm.Name = "lblAdminForm"
-        lblAdminForm.Size = New Size(65, 25)
-        lblAdminForm.TabIndex = 8
-        lblAdminForm.Text = "Admin"
         ' 
         ' lblLogOut
         ' 
@@ -138,5 +128,4 @@ Partial Class MainForm
     Friend WithEvents lblMyOrders As Label
     Friend WithEvents lblProfile As Label
     Friend WithEvents flpProducts As FlowLayoutPanel
-    Friend WithEvents lblAdminForm As Label
 End Class
